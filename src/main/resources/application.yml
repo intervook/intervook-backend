@@ -7,6 +7,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+    open-in-view: false
   mvc:
     throw-exception-if-no-handler-found: true
   security:
@@ -40,5 +41,5 @@ spring:
             client-authentication-method: client_secret_post
             scope: profile_nickname, account_email
 
-cors-allowed-origins: http//localhost:33000,${frontend-url}
+cors-allowed-origins: http//localhost:3000,${frontend-url}
 token-key: ${TOKEN_KEY:7B9476CED2F62DBC3A323A4B7E8B312C}
