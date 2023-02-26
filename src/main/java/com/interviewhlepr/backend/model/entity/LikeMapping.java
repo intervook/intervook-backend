@@ -1,12 +1,6 @@
 package com.interviewhlepr.backend.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,12 +10,17 @@ import java.util.Objects;
 @Setter
 @Getter
 @Entity
-public class PostTag {
+public class LikeMapping {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String content;
+    @Column(nullable = false)
+    private Long userId;
+    @Column(nullable = false)
+    private Long postId;
+    @Column(nullable = false, columnDefinition = "BOOLEAN")
+    private boolean activation = true;
 
     @Column(nullable = false)
     private Instant createDt;
@@ -43,4 +42,5 @@ public class PostTag {
     void preUpdate() {
         this.updateDt = Instant.now();
     }
+
 }

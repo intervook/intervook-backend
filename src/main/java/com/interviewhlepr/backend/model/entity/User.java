@@ -1,12 +1,20 @@
 package com.interviewhlepr.backend.model.entity;
 
 import com.interviewhlepr.backend.model.enums.UserType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.lang.Nullable;
 
-import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.Objects;
 
@@ -25,6 +33,7 @@ public class User {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserType type;
+
     @Column(nullable = false)
     private Instant createDt;
     @Column(nullable = false)

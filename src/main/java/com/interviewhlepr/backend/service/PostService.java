@@ -12,7 +12,12 @@ import com.interviewhlepr.backend.repository.PostTagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +36,7 @@ public class PostService {
         post.setPostVisibility(PostVisibility.TEMP);
         post.setUser(user);
         post.setTitle(postRequestDTO.title());
+        post.setSubTitle(postRequestDTO.subTitle());
         post.setLink(postRequestDTO.link());
 
         if (Objects.nonNull(postRequestDTO.imageFileDTOList())) {
