@@ -1,0 +1,18 @@
+{
+	category: ‘’CS”,
+	type: “단답형”,
+	title: “캐시 메모리”,
+	body: {
+		title: “다음 중 캐시 메모리의 설명이 아닌 것을 고르시오”,
+		questionList: [“”, “”, “”, “”, “”]
+	}
+}
+
+{
+	category: ‘’CS”,
+	type: “서술형”,
+	title: “캐시 메모리”,
+	body: {
+		answer: “캐시 메모리는 어쩌구 입니다.”
+	}
+}
