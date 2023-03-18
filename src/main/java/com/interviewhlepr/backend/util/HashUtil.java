@@ -15,7 +15,7 @@ public class HashUtil {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             return hashing(md, msg);
         } catch (Exception e) {
-            return null;
+            throw new RuntimeException(e);
         }
     }
 
@@ -24,7 +24,7 @@ public class HashUtil {
             MessageDigest md = MessageDigest.getInstance("SHA-224");
             return hashing(md, msg);
         } catch (Exception e) {
-            return null;
+            throw new RuntimeException(e);
         }
     }
 }

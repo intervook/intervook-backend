@@ -20,7 +20,7 @@ public interface PostMapper {
 
     @Named("ImageFileDTOList")
     default ImageFileDTO imageFileDTOList(ImageFile imageFile) {
-        return new ImageFileDTO("/" + imageFile.getFileName(), imageFile.getOriginalFileName());
+        return new ImageFileDTO(imageFile.getUrl(), imageFile.getOriginalFileName());
     }
 
     @Named("TagDTOList")

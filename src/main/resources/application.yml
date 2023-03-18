@@ -6,8 +6,9 @@ spring:
     active: dev
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
     open-in-view: false
+    database-platform: org.hibernate.dialect.MySQL8Dialect
   mvc:
     throw-exception-if-no-handler-found: true
   security:
@@ -43,3 +44,5 @@ spring:
 
 cors-allowed-origins: http//localhost:3000,${frontend-url}
 token-key: ${TOKEN_KEY:7B9476CED2F62DBC3A323A4B7E8B312C}
+file:
+  upload-dir: ./files/uploads
