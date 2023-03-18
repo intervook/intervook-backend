@@ -1,5 +1,6 @@
 package com.interviewhlepr.backend.service;
 
+import com.interviewhlepr.backend.exception.CommonException;
 import com.interviewhlepr.backend.mapper.PostMapper;
 import com.interviewhlepr.backend.model.dto.PostDTO;
 import com.interviewhlepr.backend.model.dto.PostRequestDTO;
@@ -22,8 +23,10 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,73 +37,90 @@ public class PostService {
     private final ImageFileRepository imageFileRepository;
     private final PostMapper postMapper;
 
+    private final Random random = new Random();
+
     @Value("${file.service-url}")
     private String fileServiceUrl;
 
     @Transactional
-    public PostDTO temporarySavePost(User user, PostRequestDTO postRequestDTO, List<MultipartFile> imageList) {
+    public PostDTO upsertTemporaryPost(User user, PostRequestDTO postRequestDTO, List<MultipartFile> imageList) {
+        Post post = Optional.ofNullable(postRequestDTO.id())
+                .map((id) -> postRepository.findById(id).orElseThrow(() -> CommonException.ITEM_NOT_FOUND))
+                .orElse(new Post());
 
-        Post post = new Post();
+        List<ImageFile> existedImageFileList = post.getImageFileList();
+
         post.setPostVisibility(PostVisibility.TEMP);
         post.setUser(user);
         post.setTitle(postRequestDTO.title());
         post.setSubTitle(postRequestDTO.subTitle());
         post.setLink(postRequestDTO.link());
-
-        if (Objects.nonNull(imageList)) {
-            List<ImageFile> imageFileList = imageList.stream().map(image -> {
-                Path path = fileService.saveImageFile(image, user.getUid());
-                return ImageFile.builder()
-                        .path(path.getParent().toString())
-                        .fileName(path.getFileName().toString())
-                        .url(fileServiceUrl + "/" + path.getFileName().toString())
-                        .originalFileName(image.getOriginalFilename())
-                        .build();
-            }).toList();
-
-            if (!imageFileList.isEmpty()) {
-                imageFileRepository.saveAll(imageFileList);
-            }
-
-            post.setImageFileList(imageFileList);
-        }
-
-        if (CollectionUtils.isNotEmpty(postRequestDTO.tagList())) {
-            List<PostTag> postTagList = new ArrayList<>();
-
-            List<PostTag> existedPostTagList = postTagRepository.findAllByContentIn(postRequestDTO.tagList());
-            Set<String> existedPostTagSet = new HashSet<>(existedPostTagList.stream()
-                    .map(PostTag::getContent)
-                    .toList());
-
-            List<PostTag> nonExistedPostTagList = new ArrayList<>();
-            postRequestDTO.tagList().forEach(tag -> {
-                if (existedPostTagSet.contains(tag)) {
-                    return;
-                }
-
-                PostTag postTag = new PostTag();
-                postTag.setContent(tag);
-                nonExistedPostTagList.add(postTag);
-            });
-
-            if (!nonExistedPostTagList.isEmpty()) {
-                postTagRepository.saveAll(nonExistedPostTagList);
-            }
-
-            postTagList.addAll(existedPostTagList);
-            postTagList.addAll(nonExistedPostTagList);
-
-            post.setPostTagList(postTagList);
-        }
+        post.setPostTagList(upsertTagList(postRequestDTO.tagList()));
+        post.setImageFileList(upsertImageFileList(imageList));
 
         postRepository.save(post);
+
+        if (CollectionUtils.isNotEmpty(existedImageFileList)) {
+            imageFileRepository.deleteAll(existedImageFileList);
+        }
 
         return postMapper.toDTO(post);
     }
 
-    public PostDTO temporaryUpdatePost(User user, PostRequestDTO postRequestDTO) {
-        return null;
+    private List<ImageFile> upsertImageFileList(List<MultipartFile> imageList) {
+        if (CollectionUtils.isEmpty(imageList)) {
+            return new ArrayList<>();
+        }
+
+        List<ImageFile> imageFileList = imageList.stream().map(image -> {
+            Path path = fileService.saveImageFile(image, String.valueOf(random.nextInt(1000)));
+            return ImageFile.builder()
+                    .path(path.getParent().toString())
+                    .fileName(path.getFileName().toString())
+                    .url(fileServiceUrl + "/" + path.getFileName().toString())
+                    .originalFileName(image.getOriginalFilename())
+                    .build();
+        }).collect(Collectors.toList());
+
+        if (!imageFileList.isEmpty()) {
+            imageFileRepository.saveAll(imageFileList);
+        }
+
+        return imageFileList;
+    }
+
+    private List<PostTag> upsertTagList(List<String> tagList) {
+        if (CollectionUtils.isEmpty(tagList)) {
+            return new ArrayList<>();
+        }
+
+        List<PostTag> postTagList = new ArrayList<>();
+
+        List<PostTag> existedPostTagList = postTagRepository.findAllByContentIn(tagList);
+        Set<String> existedPostTagSet = new HashSet<>(existedPostTagList.stream()
+                .map(PostTag::getContent)
+                .toList());
+
+        List<PostTag> nonExistedPostTagList = new ArrayList<>();
+        tagList.forEach(tag -> {
+            if (existedPostTagSet.contains(tag)) {
+                return;
+            }
+
+            PostTag postTag = new PostTag();
+            postTag.setContent(tag);
+            nonExistedPostTagList.add(postTag);
+        });
+
+        if (!nonExistedPostTagList.isEmpty()) {
+            postTagRepository.saveAll(nonExistedPostTagList);
+        }
+
+        postTagList.addAll(existedPostTagList);
+        postTagList.addAll(nonExistedPostTagList);
+
+
+        return postTagList;
     }
 
     public PostDTO publishPost(User user, PostRequestDTO postRequestDTO) {

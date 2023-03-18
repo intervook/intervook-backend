@@ -47,15 +47,20 @@ public class PostController {
                                            @Valid @RequestPart(name = "body") PostRequestDTO postRequestDTO,
                                            @RequestPart(name = "image_list", required = false) List<MultipartFile> imageList) {
 
-        PostDTO postDTO = postService.temporarySavePost(user, postRequestDTO, imageList);
+        PostDTO postDTO = postService.upsertTemporaryPost(user, postRequestDTO, imageList);
 
         return BaseResponse.of(postDTO);
     }
 
     @PutMapping("/temp/update")
-    public BaseResponse temporaryUpdatePost(@AuthResult User user, @Valid @RequestBody PostRequestDTO postRequestDTO) {
+    public BaseResponse temporaryUpdatePost(@AuthResult User user,
+                                            @Valid @RequestPart(name = "body") PostRequestDTO postRequestDTO,
+                                            @RequestPart(name = "image_list", required = false) List<MultipartFile> imageList) {
+        if (postRequestDTO.id() == null) {
+            throw CommonException.INVALID_PARAMETER;
+        }
 
-        PostDTO postDTO = postService.temporaryUpdatePost(user, postRequestDTO);
+        PostDTO postDTO = postService.upsertTemporaryPost(user, postRequestDTO, imageList);
 
         return BaseResponse.of(postDTO);
     }

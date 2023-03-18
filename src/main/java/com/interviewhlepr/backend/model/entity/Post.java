@@ -11,13 +11,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -42,10 +43,10 @@ public class Post {
     private String link;
     @Column(nullable = false)
     private int likeCnt = 0;
+    @OneToMany
+    private List<ImageFile> imageFileList = new ArrayList<>();
     @ManyToMany
-    private List<ImageFile> imageFileList = Collections.emptyList();
-    @ManyToMany
-    private List<PostTag> postTagList = Collections.emptyList();
+    private List<PostTag> postTagList = new ArrayList<>();
 
     @Column(nullable = false)
     private Instant createDt;
