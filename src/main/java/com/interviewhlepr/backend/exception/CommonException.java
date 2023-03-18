@@ -14,6 +14,7 @@ public class CommonException extends BaseException {
         this.status = status;
         this.errorDescription = errorDescription;
     }
+
     public static CommonException ALREADY_REGISTERED_USER = new CommonException(HttpStatus.CONFLICT, "ALREADY_REGISTERED_USER");
     public static CommonException ALREADY_REGISTERED_NICKNAME = new CommonException(HttpStatus.CONFLICT, "ALREADY_REGISTERED_NICKNAME");
     public static CommonException ALREADY_REGISTERED_EMAIL = new CommonException(HttpStatus.CONFLICT, "ALREADY_REGISTERED_EMAIL");
@@ -30,5 +31,7 @@ public class CommonException extends BaseException {
     public static CommonException ITEM_NOT_FOUND = new CommonException(HttpStatus.NOT_FOUND, "ITEM_NOT_FOUND");
     public static CommonException SERVER_ERROR = new CommonException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR");
     public static CommonException ILLEGAL_STATE_ERROR = new CommonException(HttpStatus.INTERNAL_SERVER_ERROR, "ILLEGAL_STATE_ERROR");
+    public static CommonException POST_IS_ALREADY_PUBLISHED = new CommonException(HttpStatus.BAD_REQUEST, "POST_IS_ALREADY_PUBLISHED");
+    public static CommonException POST_IS_NOT_PUBLISHED = new CommonException(HttpStatus.BAD_REQUEST, "POST_IS_NOT_PUBLISHED");
 
 }

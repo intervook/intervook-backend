@@ -23,6 +23,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
@@ -48,9 +49,12 @@ public class PostService {
                 .map((id) -> postRepository.findById(id).orElseThrow(() -> CommonException.ITEM_NOT_FOUND))
                 .orElse(new Post());
 
+        return upsertPost(user, post, postRequestDTO, imageList);
+    }
+
+    public PostDTO upsertPost(User user, Post post, PostRequestDTO postRequestDTO, List<MultipartFile> imageList) {
         List<ImageFile> existedImageFileList = post.getImageFileList();
 
-        post.setPostVisibility(PostVisibility.TEMP);
         post.setUser(user);
         post.setTitle(postRequestDTO.title());
         post.setSubTitle(postRequestDTO.subTitle());
@@ -123,12 +127,37 @@ public class PostService {
         return postTagList;
     }
 
-    public PostDTO publishPost(User user, PostRequestDTO postRequestDTO) {
-        return null;
+    @Transactional
+    public PostDTO publishPost(User user, PostRequestDTO postRequestDTO, List<MultipartFile> imageList) {
+        Post post = Optional.ofNullable(postRequestDTO.id())
+                .map((id) -> postRepository.findById(id)
+                        .orElseThrow(() -> CommonException.ITEM_NOT_FOUND))
+                .orElse(new Post());
+
+        if (post.getPostVisibility() != PostVisibility.TEMP) {
+            throw CommonException.POST_IS_ALREADY_PUBLISHED;
+        }
+
+        post.setPostVisibility(PostVisibility.PUBLIC);
+
+        return upsertPost(user, post, postRequestDTO, imageList);
     }
 
-    public PostDTO updatePost(User user, PostRequestDTO postRequestDTO) {
-        return null;
+    @Transactional
+    public PostDTO updatePost(User user, PostRequestDTO postRequestDTO, List<MultipartFile> imageList) {
+        assert postRequestDTO.id() != null;
+
+        Post post = postRepository.findById(postRequestDTO.id()).orElseThrow(() -> CommonException.ITEM_NOT_FOUND);
+
+        switch (post.getPostVisibility()) {
+            case PRIVATE:
+                if (!Objects.equals(post.getUser().getId(), user.getId()))
+                    throw CommonException.UNAUTHORIZED;
+            case TEMP:
+                throw CommonException.POST_IS_NOT_PUBLISHED;
+        }
+
+        return upsertPost(user, post, postRequestDTO, imageList);
     }
 
 }

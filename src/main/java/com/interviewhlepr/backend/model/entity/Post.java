@@ -32,7 +32,7 @@ public class Post {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private PostVisibility postVisibility;
+    private PostVisibility postVisibility = PostVisibility.TEMP;
 
     @ManyToOne
     @JoinColumn(nullable = false)

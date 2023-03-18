@@ -14,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -66,17 +65,24 @@ public class PostController {
     }
 
     @PostMapping("/publish")
-    public BaseResponse publishPost(@AuthResult User user, @Valid @RequestBody PostRequestDTO postRequestDTO) {
+    public BaseResponse publishPost(@AuthResult User user,
+                                    @Valid @RequestPart(name = "body") PostRequestDTO postRequestDTO,
+                                    @RequestPart(name = "image_list", required = false) List<MultipartFile> imageList) {
 
-        PostDTO postDTO = postService.publishPost(user, postRequestDTO);
+        PostDTO postDTO = postService.publishPost(user, postRequestDTO, imageList);
 
         return BaseResponse.of(postDTO);
     }
 
     @PutMapping("/update")
-    public BaseResponse updatePost(@AuthResult User user, @Valid @RequestBody PostRequestDTO postRequestDTO) {
+    public BaseResponse updatePost(@AuthResult User user,
+                                   @Valid @RequestPart(name = "body") PostRequestDTO postRequestDTO,
+                                   @RequestPart(name = "image_list", required = false) List<MultipartFile> imageList) {
+        if (postRequestDTO.id() == null) {
+            throw CommonException.INVALID_PARAMETER;
+        }
 
-        PostDTO postDTO = postService.updatePost(user, postRequestDTO);
+        PostDTO postDTO = postService.updatePost(user, postRequestDTO, imageList);
 
         return BaseResponse.of(postDTO);
     }
