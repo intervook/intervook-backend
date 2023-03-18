@@ -3,6 +3,7 @@ package com.interviewhlepr.backend.controller;
 import com.interviewhlepr.backend.annotation.AuthResult;
 import com.interviewhlepr.backend.exception.CommonException;
 import com.interviewhlepr.backend.model.dto.BaseResponse;
+import com.interviewhlepr.backend.model.dto.PageDTO;
 import com.interviewhlepr.backend.model.dto.PostDTO;
 import com.interviewhlepr.backend.model.dto.PostRequestDTO;
 import com.interviewhlepr.backend.model.entity.User;
@@ -12,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,15 +33,23 @@ public class PostController {
     private final PostQueryService postQueryService;
 
     @GetMapping
-    public BaseResponse getPostList(@RequestParam(defaultValue = "0") int page) {
-        if (page < 0) {
+    public BaseResponse getPostList(@RequestParam(defaultValue = "1") int page) {
+        if (page < 1) {
             throw CommonException.INVALID_PARAMETER;
         }
 
-        Page<PostDTO> postPage = postQueryService.getPostPage(page, POST_LIST_SIZE);
+        Page<PostDTO> postPage = postQueryService.getPostList(page - 1, POST_LIST_SIZE);
 
-        return BaseResponse.of(postPage);
+        return BaseResponse.of(PageDTO.of(postPage));
     }
+
+    @GetMapping("/{postId}")
+    public BaseResponse getPostList(@PathVariable Long postId) {
+        PostDTO postDTO = postQueryService.getPost(postId);
+
+        return BaseResponse.of(postDTO);
+    }
+
 
     @PostMapping(value = "/temp/write", consumes = {"multipart/form-data"})
     public BaseResponse temporaryWritePost(@AuthResult User user,
