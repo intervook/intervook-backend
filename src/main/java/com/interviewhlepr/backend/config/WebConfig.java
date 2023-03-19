@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.interviewhlepr.backend.annotation.resolver.AuthResultResolver;
 import lombok.RequiredArgsConstructor;
@@ -41,11 +40,10 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Bean
     public Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder() {
-        SimpleModule instantModule = new SimpleModule();
         JavaTimeModule javaTimeModule = new JavaTimeModule();
 
         return new Jackson2ObjectMapperBuilder()
-                .modules(instantModule, javaTimeModule)
+                .modules(javaTimeModule)
                 .failOnUnknownProperties(false) // SpringBoot default
                 .featuresToDisable(MapperFeature.DEFAULT_VIEW_INCLUSION) // SpringBoot default
                 .featuresToEnable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS) // SpringBoot default
