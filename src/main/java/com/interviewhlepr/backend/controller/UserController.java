@@ -2,6 +2,7 @@ package com.interviewhlepr.backend.controller;
 
 import com.interviewhlepr.backend.annotation.AuthResult;
 import com.interviewhlepr.backend.model.dto.BaseResponse;
+import com.interviewhlepr.backend.model.dto.UserDTO;
 import com.interviewhlepr.backend.model.entity.User;
 import com.interviewhlepr.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class UserController {
 
     @GetMapping
     public BaseResponse me(@AuthResult User user) {
-        return BaseResponse.of(user);
+        return BaseResponse.of(new UserDTO(user));
     }
 
     @GetMapping("/nickname")
