@@ -1,5 +1,6 @@
 package com.interviewhlepr.backend.service;
 
+import com.interviewhlepr.backend.exception.CommonException;
 import com.interviewhlepr.backend.mapper.PostMapper;
 import com.interviewhlepr.backend.model.dto.PostDTO;
 import com.interviewhlepr.backend.model.entity.Post;
@@ -28,6 +29,6 @@ public class PostQueryService {
     public PostDTO getPost(Long postId) {
         return postRepository.findById(postId)
                 .map(postMapper::toDTO)
-                .orElse(null);
+                .orElseThrow(() -> CommonException.ITEM_NOT_FOUND);
     }
 }

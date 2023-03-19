@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.interviewhlepr.backend.annotation.resolver.AuthResultResolver;
-import com.interviewhlepr.backend.config.jackson.InstantDeserializer;
-import com.interviewhlepr.backend.config.jackson.InstantSerializer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +18,6 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.time.Instant;
 import java.util.List;
 
 @EnableWebMvc
@@ -43,15 +40,10 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Bean
     public Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder() {
-        SimpleModule javaTimeModule = new SimpleModule();
-        javaTimeModule.addSerializer(Instant.class, new InstantSerializer());
-        javaTimeModule.addDeserializer(Instant.class, new InstantDeserializer());
-
         return new Jackson2ObjectMapperBuilder()
-                .modules(javaTimeModule)
+                .modules(new JavaTimeModule())
                 .failOnUnknownProperties(false) // SpringBoot default
-                .featuresToDisable(MapperFeature.DEFAULT_VIEW_INCLUSION) // SpringBoot default
-                .featuresToEnable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS) // SpringBoot default
+                .featuresToDisable(MapperFeature.DEFAULT_VIEW_INCLUSION, SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
                 .serializationInclusion(JsonInclude.Include.NON_NULL) // null data는 포함하지 않는다.
                 .propertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
     }
