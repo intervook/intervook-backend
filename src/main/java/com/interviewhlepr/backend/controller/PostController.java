@@ -50,6 +50,13 @@ public class PostController {
         return BaseResponse.of(postDTO);
     }
 
+    @GetMapping("/temp")
+    public BaseResponse getMyTemp(@AuthResult User user) {
+        PostDTO postDTO = postQueryService.getMyTempPost(user);
+
+        return BaseResponse.of(postDTO);
+    }
+
 
     @PostMapping(value = "/temp/write", consumes = {"multipart/form-data"})
     public BaseResponse temporaryWritePost(@AuthResult User user,

@@ -4,6 +4,8 @@ import com.interviewhlepr.backend.exception.CommonException;
 import com.interviewhlepr.backend.mapper.PostMapper;
 import com.interviewhlepr.backend.model.dto.PostDTO;
 import com.interviewhlepr.backend.model.entity.Post;
+import com.interviewhlepr.backend.model.entity.User;
+import com.interviewhlepr.backend.model.enums.PostVisibility;
 import com.interviewhlepr.backend.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,6 +30,13 @@ public class PostQueryService {
     @Transactional
     public PostDTO getPost(Long postId) {
         return postRepository.findById(postId)
+                .map(postMapper::toDTO)
+                .orElseThrow(() -> CommonException.ITEM_NOT_FOUND);
+    }
+
+    @Transactional
+    public PostDTO getMyTempPost(User user) {
+        return postRepository.findFirstByUserAndPostVisibilityOrderByCreateDtDesc(user, PostVisibility.TEMP)
                 .map(postMapper::toDTO)
                 .orElseThrow(() -> CommonException.ITEM_NOT_FOUND);
     }
