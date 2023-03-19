@@ -61,7 +61,7 @@ public class PostController {
         return BaseResponse.of(postDTO);
     }
 
-    @PutMapping("/temp/update")
+    @PutMapping(value = "/temp/update", consumes = {"multipart/form-data"})
     public BaseResponse temporaryUpdatePost(@AuthResult User user,
                                             @Valid @RequestPart(name = "body") PostRequestDTO postRequestDTO,
                                             @RequestPart(name = "image_list", required = false) List<MultipartFile> imageList) {
@@ -74,7 +74,7 @@ public class PostController {
         return BaseResponse.of(postDTO);
     }
 
-    @PostMapping("/publish")
+    @PostMapping(value = "/publish", consumes = {"multipart/form-data"})
     public BaseResponse publishPost(@AuthResult User user,
                                     @Valid @RequestPart(name = "body") PostRequestDTO postRequestDTO,
                                     @RequestPart(name = "image_list", required = false) List<MultipartFile> imageList) {
@@ -84,7 +84,7 @@ public class PostController {
         return BaseResponse.of(postDTO);
     }
 
-    @PutMapping("/update")
+    @PutMapping(value = "/update", consumes = {"multipart/form-data"})
     public BaseResponse updatePost(@AuthResult User user,
                                    @Valid @RequestPart(name = "body") PostRequestDTO postRequestDTO,
                                    @RequestPart(name = "image_list", required = false) List<MultipartFile> imageList) {
