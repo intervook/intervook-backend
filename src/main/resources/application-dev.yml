@@ -12,6 +12,6 @@ logging:
   level:
     root: info
 
-frontend-url: ${FRONTEND_URL:http://localhost:33000}
+frontend-url: ${FRONTEND_URL:http://localhost:3000}
 file:
   service-url: http://localhost:${server.port}/image
