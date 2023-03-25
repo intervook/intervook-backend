@@ -26,7 +26,7 @@ public class QuizController {
     private final QuizService quizService;
 
 
-    @GetMapping("/list")
+    @GetMapping
     public BaseResponse getQuizList(
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false) String category,
