@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
@@ -34,7 +35,7 @@ public class BaseExceptionHandler {
         return BaseResponse.exception(CommonException.MISSING_PARAMETER);
     }
 
-    @ExceptionHandler({MethodArgumentNotValidException.class, MultipartException.class})
+    @ExceptionHandler({MethodArgumentNotValidException.class, MultipartException.class, MethodArgumentTypeMismatchException.class})
     public BaseResponse invalidParameter(Exception e) {
         log.error("[invalidParameter]: {}", e.getMessage());
         return BaseResponse.exception(CommonException.INVALID_PARAMETER);

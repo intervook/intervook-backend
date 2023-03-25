@@ -3,7 +3,6 @@ package com.interviewhlepr.backend.repository.querydsl;
 import com.interviewhlepr.backend.model.QuizFilter;
 import com.interviewhlepr.backend.model.entity.QQuiz;
 import com.interviewhlepr.backend.model.entity.Quiz;
-import com.interviewhlepr.backend.model.enums.ProblemType;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.util.StringUtils;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -24,24 +23,25 @@ public class QuizRepositorySupport extends QuerydslRepositorySupport {
 
     public List<Quiz> findALlByQuizFilterWithPageable(QuizFilter quizFilter, Pageable pageable) {
         return jpaQueryFactory.selectFrom(QQuiz.quiz)
-                .where(equalsIgnoreCaseCategory(quizFilter.category()), eqProblemType(quizFilter.type()))
+                .where(equalsIgnoreCaseCategory(quizFilter), eqProblemType(quizFilter))
                 .offset(pageable.getOffset())
+                .orderBy(QQuiz.quiz.id.desc())
                 .limit(pageable.getPageSize())
                 .fetch();
     }
 
-    private BooleanExpression equalsIgnoreCaseCategory(String category) {
-        if (StringUtils.isNullOrEmpty(category)) {
+    private BooleanExpression equalsIgnoreCaseCategory(QuizFilter quizFilter) {
+        if (quizFilter == null || StringUtils.isNullOrEmpty(quizFilter.category())) {
             return null;
         }
-        return QQuiz.quiz.category.equalsIgnoreCase(category);
+        return QQuiz.quiz.category.equalsIgnoreCase(quizFilter.category());
     }
 
-    private BooleanExpression eqProblemType(ProblemType type) {
-        if (type == null) {
+    private BooleanExpression eqProblemType(QuizFilter quizFilter) {
+        if (quizFilter == null || quizFilter.type() == null) {
             return null;
         }
-        return QQuiz.quiz.type.eq(type);
+        return QQuiz.quiz.type.eq(quizFilter.type());
     }
 
 }
