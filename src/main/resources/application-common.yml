@@ -1,0 +1,32 @@
+spring:
+  config:
+    activate:
+      on-profile: common_dev
+
+logging:
+  level:
+    root: debug
+    org.hibernate.sql: debug
+    org.hibernate.type: trace
+
+cors-allowed-origins: http://localhost:3000,${front-end-url}
+token-key: ${TOKEN_KEY:7B9476CED2F62DBC3A323A4B7E8B312C}
+file:
+  upload-dir: ./files/uploads
+  service-url: http://localhost:${server.port}/image
+
+---
+spring:
+  config:
+    activate:
+      on-profile: common_prod
+
+logging:
+  level:
+    root: info
+
+cors-allowed-origins: http://localhost:3000,${front-end-url}
+token-key: ${TOKEN_KEY:7B9476CED2F62DBC3A323A4B7E8B312C}
+file:
+  upload-dir: ./files/uploads
+  service-url: http://localhost:${server.port}/image

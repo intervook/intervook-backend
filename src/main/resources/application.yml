@@ -1,14 +1,31 @@
-server:
-  port: 18068
+front-end-url: ${FRONTEND_URL:http://localhost:3000}
 
 spring:
+  application:
+    name: intervook
   profiles:
+    include: common, mysql
+    group:
+      "dev": "mysql_dev, common_dev"
+      "aws-dev": "mysql_aws_dev, common_dev"
+      "prod": "mysql_prod, common_prod"
     active: dev
+  lifecycle:
+    timeout-per-shutdown-phase: 1m
+  main:
+    allow-circular-references: true # self injection(aop proxy)을 위해 사용
   jpa:
+    show-sql: false
+    generate-ddl: false
+    open-in-view: false
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: none
-    open-in-view: false
-    database-platform: org.hibernate.dialect.MySQL8Dialect
+    defer-datasource-initialization: true
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    default-property-inclusion: NON_NULL
   mvc:
     throw-exception-if-no-handler-found: true
   security:
@@ -42,7 +59,6 @@ spring:
             client-authentication-method: client_secret_post
             scope: profile_nickname, account_email
 
-cors-allowed-origins: http://localhost:3000,${front-end-url}
-token-key: ${TOKEN_KEY:7B9476CED2F62DBC3A323A4B7E8B312C}
-file:
-  upload-dir: ./files/uploads
+server:
+  port: 18068
+  shutdown: graceful
