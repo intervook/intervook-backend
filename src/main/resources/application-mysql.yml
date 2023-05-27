@@ -6,7 +6,7 @@ spring:
     show-sql: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3806/interview-helper
+    url: jdbc:mysql://localhost:3806/intervook
     username: root
     password: root
 
@@ -19,7 +19,7 @@ spring:
     show-sql: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3806/interview-helper
+    url: jdbc:mysql://localhost:3806/intervook
     username: root
     password: root
 
@@ -32,7 +32,7 @@ spring:
     show-sql: false
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3806/interview-helper
+    url: jdbc:mysql://localhost:3806/intervook
     username: root
     password: root
 
