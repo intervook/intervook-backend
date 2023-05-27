@@ -35,13 +35,15 @@ public class AuthService {
         AuthProvider provider = AuthProvider.valueOf(authToken.getAuthorizedClientRegistrationId().toUpperCase());
         AuthDTO authDTO = parseAuthResult(authToken.getPrincipal(), provider);
 
-        authRepository.findByEmail(authDTO.email())
-                .ifPresent(auth -> {
-                    throw CommonException.ALREADY_REGISTERED_EMAIL;
-                });
-
         Auth auth = authRepository.findByUid(authDTO.uid())
-                .orElseGet(() -> new Auth(authDTO.uid(), authDTO.email(), provider));
+                .orElseGet(() -> {
+                    authRepository.findByEmail(authDTO.email())
+                            .ifPresent(ignored -> {
+                                throw CommonException.ALREADY_REGISTERED_EMAIL;
+                            });
+
+                    return new Auth(authDTO.uid(), authDTO.email(), provider);
+                });
         authRepository.save(auth);
 
         return authDTO;

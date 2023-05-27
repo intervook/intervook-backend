@@ -35,7 +35,7 @@ public class ManageAuthService {
             parameterMap.forEach((key, value) -> parameterBuilder.append(key).append("=").append(value).append("&"));
         }
 
-        return frontEndUrl + AUTH_FAIL_URL + parameterBuilder;
+        return frontEndUrl + AUTH_FAIL_URL + "?" + parameterBuilder;
     }
 
     public String parseAccessToken(HttpServletRequest request) {
