@@ -1,10 +1,10 @@
 package com.interviewhlepr.backend.service.auth;
 
 import com.interviewhlepr.backend.exception.CommonException;
-import com.interviewhlepr.backend.repository.AuthRepository;
 import com.interviewhlepr.backend.model.dto.AuthDTO;
 import com.interviewhlepr.backend.model.entity.Auth;
 import com.interviewhlepr.backend.model.enums.AuthProvider;
+import com.interviewhlepr.backend.repository.AuthRepository;
 import com.interviewhlepr.backend.util.EmailValidationUtil;
 import com.interviewhlepr.backend.util.HashUtil;
 import lombok.RequiredArgsConstructor;
@@ -35,9 +35,13 @@ public class AuthService {
         AuthProvider provider = AuthProvider.valueOf(authToken.getAuthorizedClientRegistrationId().toUpperCase());
         AuthDTO authDTO = parseAuthResult(authToken.getPrincipal(), provider);
 
+        authRepository.findByEmail(authDTO.email())
+                .ifPresent(auth -> {
+                    throw CommonException.ALREADY_REGISTERED_EMAIL;
+                });
+
         Auth auth = authRepository.findByUid(authDTO.uid())
                 .orElseGet(() -> new Auth(authDTO.uid(), authDTO.email(), provider));
-
         authRepository.save(auth);
 
         return authDTO;

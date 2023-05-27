@@ -23,16 +23,21 @@ public class SimpleAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        AuthDTO authDTO = authService.saveAuth(authentication);
-        User user = userService.syncUser(authDTO.uid(), authDTO.nickname());
-
         String targetUrl;
-        if (!user.isBlock()) {
-            targetUrl = manageAuthService.getAuthUrl();
-            manageAuthService.transferAuth(request, response, authDTO.uid());
-        } else {
-            targetUrl = manageAuthService.getAuthFailureUrl(Map.of("error", "block_user"));
-            manageAuthService.clearAuth(request, response);
+        try {
+            AuthDTO authDTO = authService.saveAuth(authentication);
+            User user = userService.syncUser(authDTO.uid(), authDTO.nickname());
+
+            if (!user.isBlock()) {
+                targetUrl = manageAuthService.getAuthUrl();
+                manageAuthService.transferAuth(request, response, authDTO.uid());
+            } else {
+                targetUrl = manageAuthService.getAuthFailureUrl(Map.of("error", "block_user"));
+                manageAuthService.clearAuth(request, response);
+            }
+        } catch (Exception e) {
+            logger.warn("fail to oauth login.", e);
+            targetUrl = manageAuthService.getAuthFailureUrl(Map.of("error", e.getMessage()));
         }
 
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
