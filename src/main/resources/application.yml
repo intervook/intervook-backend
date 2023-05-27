@@ -30,19 +30,19 @@ spring:
             client-id: ${NAVER_CLIENT_ID}
             client-secret: ${NAVER_CLIENT_SECRET}
             authorization-grant-type: authorization_code
-            redirect-uri: "{baseUrl}/api/auth/social/{registrationId}/callback"
+            redirect-uri: "${front-end-url}/api/auth/social/{registrationId}/callback"
             client-name: naver
             client-authentication-method: client_secret_post
           kakao:
             client-id: ${KAKAO_CLIENT_ID}
             client-secret: ${KAKAO_CLIENT_SECRET}
             authorization-grant-type: authorization_code
-            redirect-uri: "{baseUrl}/api/auth/social/{registrationId}/callback"
+            redirect-uri: "${front-end-url}/api/auth/social/{registrationId}/callback"
             client-name: kakao
             client-authentication-method: client_secret_post
             scope: profile_nickname, account_email
 
-cors-allowed-origins: http//localhost:3000,${frontend-url}
+cors-allowed-origins: http://localhost:3000,${front-end-url}
 token-key: ${TOKEN_KEY:7B9476CED2F62DBC3A323A4B7E8B312C}
 file:
   upload-dir: ./files/uploads

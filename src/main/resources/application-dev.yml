@@ -10,8 +10,8 @@ spring:
 
 logging:
   level:
-    root: info
+    root: debug
 
-frontend-url: ${FRONTEND_URL:http://localhost:3000}
+front-end-url: ${FRONTEND_URL:http://localhost:3000}
 file:
   service-url: http://localhost:${server.port}/image
