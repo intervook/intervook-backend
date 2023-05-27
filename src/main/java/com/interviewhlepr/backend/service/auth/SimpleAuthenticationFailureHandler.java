@@ -22,6 +22,6 @@ public class SimpleAuthenticationFailureHandler extends SimpleUrlAuthenticationF
         manageAuthService.clearAuth(request, response);
 
         log.debug("[onAuthenticationFailure] ", exception);
-        getRedirectStrategy().sendRedirect(request, response, manageAuthService.getAuthFailureUrl(Map.of("error", "server_error")));
+        getRedirectStrategy().sendRedirect(request, response, manageAuthService.getAuthFailureUrl(Map.of("error", exception.toString())));
     }
 }
