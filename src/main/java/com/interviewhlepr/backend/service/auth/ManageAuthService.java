@@ -1,6 +1,5 @@
 package com.interviewhlepr.backend.service.auth;
 
-import com.interviewhlepr.backend.model.dto.AuthDTO;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,12 +19,14 @@ public class ManageAuthService {
     private static final String REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
     private static final int ACCESS_TOKEN_EXPIRE = 3600 * 24; // 1일
     private static final int REFRESH_TOKEN_EXPIRE = 3600 * 24 * 7; // 7일
+    private static final String AUTH_SUCCESS_URL = "/auth/success";
+    private static final String AUTH_FAIL_URL = "/auth/failure";
 
     @Value("${front-end-url}")
     private String frontEndUrl;
 
     public String getAuthUrl() {
-        return frontEndUrl;
+        return frontEndUrl + AUTH_SUCCESS_URL;
     }
 
     public String getAuthFailureUrl(Map<String, String> parameterMap) {
@@ -34,7 +35,7 @@ public class ManageAuthService {
             parameterMap.forEach((key, value) -> parameterBuilder.append(key).append("=").append(value).append("&"));
         }
 
-        return frontEndUrl + "/failure?" + parameterBuilder;
+        return frontEndUrl + AUTH_FAIL_URL + parameterBuilder;
     }
 
     public String parseAccessToken(HttpServletRequest request) {
