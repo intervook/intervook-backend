@@ -1,0 +1,23 @@
+group = 'com.intervook'
+version = '0.0.1-SNAPSHOT'
+
+bootJar { enabled = false }
+jar { enabled = false }
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

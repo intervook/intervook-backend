@@ -1,0 +1,56 @@
+spring:
+  config:
+    activate:
+      on-profile: mysql_dev
+  jpa:
+    show-sql: true
+  datasource:
+    auth:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3806/intervook
+      username: root
+      password: root
+    contents:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3806/intervook
+      username: root
+      password: root
+
+---
+spring:
+  config:
+    activate:
+      on-profile: mysql_aws_dev
+  jpa:
+    show-sql: true
+  datasource:
+    auth:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3806/intervook
+      username: root
+      password: root
+    contents:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3806/intervook
+      username: root
+      password: root
+
+---
+spring:
+  config:
+    activate:
+      on-profile: mysql_prod
+  jpa:
+    show-sql: false
+  datasource:
+    auth:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3806/intervook
+      username: root
+      password: root
+    contents:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3806/intervook
+      username: root
+      password: root
+

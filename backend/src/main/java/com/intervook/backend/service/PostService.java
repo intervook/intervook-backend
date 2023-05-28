@@ -1,0 +1,157 @@
+package com.intervook.backend.service;
+
+import com.intervook.backend.exception.CommonException;
+import com.intervook.core.enums.PostVisibility;
+import com.intervook.mysql.entity.auth.User;
+import com.intervook.mysql.entity.contents.ImageFile;
+import com.intervook.mysql.entity.contents.Post;
+import com.intervook.mysql.entity.contents.PostTag;
+import com.intervook.mysql.mapper.PostMapper;
+import com.intervook.mysql.model.dto.PostDTO;
+import com.intervook.mysql.model.dto.PostRequestDTO;
+import com.intervook.mysql.repository.contents.ImageFileRepository;
+import com.intervook.mysql.repository.contents.PostRepository;
+import com.intervook.mysql.repository.contents.PostTagRepository;
+import com.nimbusds.oauth2.sdk.util.CollectionUtils;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.Path;
+import java.util.*;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class PostService {
+    private final FileService fileService;
+    private final PostTagRepository postTagRepository;
+    private final PostRepository postRepository;
+    private final ImageFileRepository imageFileRepository;
+    private final PostMapper postMapper;
+
+    private final Random random = new Random();
+
+    @Value("${file.service-url}")
+    private String fileServiceUrl;
+
+    @Transactional
+    public PostDTO upsertTemporaryPost(User user, PostRequestDTO postRequestDTO, List<MultipartFile> imageList) {
+        Post post = Optional.ofNullable(postRequestDTO.id())
+                .map((id) -> postRepository.findById(id).orElseThrow(() -> CommonException.ITEM_NOT_FOUND))
+                .orElse(new Post());
+
+        return upsertPost(user, post, postRequestDTO, imageList);
+    }
+
+    public PostDTO upsertPost(User user, Post post, PostRequestDTO postRequestDTO, List<MultipartFile> imageList) {
+        List<ImageFile> existedImageFileList = post.getImageFileList();
+
+        post.setUserId(user.getId());
+        post.setTitle(postRequestDTO.title());
+        post.setSubTitle(postRequestDTO.subTitle());
+        post.setLink(postRequestDTO.link());
+        post.setPostTagList(upsertTagList(postRequestDTO.tagList()));
+        post.setImageFileList(upsertImageFileList(imageList));
+
+        postRepository.save(post);
+
+        if (CollectionUtils.isNotEmpty(existedImageFileList)) {
+            imageFileRepository.deleteAll(existedImageFileList);
+        }
+
+        return postMapper.toDTO(post);
+    }
+
+    private List<ImageFile> upsertImageFileList(List<MultipartFile> imageList) {
+        if (CollectionUtils.isEmpty(imageList)) {
+            return new ArrayList<>();
+        }
+
+        List<ImageFile> imageFileList = imageList.stream().map(image -> {
+            Path path = fileService.saveImageFile(image, String.valueOf(random.nextInt(1000)));
+            return ImageFile.builder()
+                    .path(path.getParent().toString())
+                    .fileName(path.getFileName().toString())
+                    .url(fileServiceUrl + "/" + path.getFileName().toString())
+                    .originalFileName(image.getOriginalFilename())
+                    .build();
+        }).collect(Collectors.toList());
+
+        if (!imageFileList.isEmpty()) {
+            imageFileRepository.saveAll(imageFileList);
+        }
+
+        return imageFileList;
+    }
+
+    private List<PostTag> upsertTagList(List<String> tagList) {
+        if (CollectionUtils.isEmpty(tagList)) {
+            return new ArrayList<>();
+        }
+
+        List<PostTag> postTagList = new ArrayList<>();
+
+        List<PostTag> existedPostTagList = postTagRepository.findAllByContentIn(tagList);
+        Set<String> existedPostTagSet = new HashSet<>(existedPostTagList.stream()
+                .map(PostTag::getContent)
+                .toList());
+
+        List<PostTag> nonExistedPostTagList = new ArrayList<>();
+        tagList.forEach(tag -> {
+            if (existedPostTagSet.contains(tag)) {
+                return;
+            }
+
+            PostTag postTag = new PostTag();
+            postTag.setContent(tag);
+            nonExistedPostTagList.add(postTag);
+        });
+
+        if (!nonExistedPostTagList.isEmpty()) {
+            postTagRepository.saveAll(nonExistedPostTagList);
+        }
+
+        postTagList.addAll(existedPostTagList);
+        postTagList.addAll(nonExistedPostTagList);
+
+
+        return postTagList;
+    }
+
+    @Transactional
+    public PostDTO publishPost(User user, PostRequestDTO postRequestDTO, List<MultipartFile> imageList) {
+        Post post = Optional.ofNullable(postRequestDTO.id())
+                .map((id) -> postRepository.findById(id)
+                        .orElseThrow(() -> CommonException.ITEM_NOT_FOUND))
+                .orElse(new Post());
+
+        if (post.getPostVisibility() != PostVisibility.TEMP) {
+            throw CommonException.POST_IS_ALREADY_PUBLISHED;
+        }
+
+        post.setPostVisibility(PostVisibility.PUBLIC);
+
+        return upsertPost(user, post, postRequestDTO, imageList);
+    }
+
+    @Transactional
+    public PostDTO updatePost(User user, PostRequestDTO postRequestDTO, List<MultipartFile> imageList) {
+        assert postRequestDTO.id() != null;
+
+        Post post = postRepository.findById(postRequestDTO.id()).orElseThrow(() -> CommonException.ITEM_NOT_FOUND);
+
+        switch (post.getPostVisibility()) {
+            case PRIVATE:
+                if (!Objects.equals(post.getUserId(), user.getId()))
+                    throw CommonException.UNAUTHORIZED;
+            case TEMP:
+                throw CommonException.POST_IS_NOT_PUBLISHED;
+        }
+
+        return upsertPost(user, post, postRequestDTO, imageList);
+    }
+
+}
