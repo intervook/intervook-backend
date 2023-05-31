@@ -2,7 +2,7 @@ group = 'com.intervook'
 version = '0.0.1-SNAPSHOT'
 
 bootJar { enabled = false }
-jar { enabled = false }
+jar { enabled = true }
 
 configurations {
     compileOnly {
@@ -48,8 +48,4 @@ tasks.withType(JavaCompile).configureEach {
 
 clean.doLast {
     file(generated).deleteDir()
-}
-
-tasks.named('test') {
-    useJUnitPlatform()
 }
