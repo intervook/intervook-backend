@@ -95,8 +95,8 @@ public class SecurityConfig {
                         .logoutSuccessHandler(logoutSuccessHandler))
                 // 소셜 로그인
                 .oauth2Login(config -> config
-                        .authorizationEndpoint().baseUri("/api/auth/social").and()
-                        .redirectionEndpoint().baseUri("/api/auth/social/{registrationId}/callback").and()
+                        .authorizationEndpoint(authConfig -> authConfig.baseUri("/api/auth/social"))
+                        .redirectionEndpoint(redirectionConfig -> redirectionConfig.baseUri("/api/auth/social/{registrationId}/callback"))
                         .successHandler(simpleAuthenticationSuccessHandler)
                         .failureHandler(simpleAuthenticationFailureHandler))
                 // auth 예외 처리
