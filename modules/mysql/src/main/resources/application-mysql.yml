@@ -4,6 +4,8 @@ spring:
       on-profile: mysql_dev
   jpa:
     show-sql: true
+    hibernate:
+      ddl-auto: update
   datasource:
     auth:
       driver-class-name: com.mysql.cj.jdbc.Driver
