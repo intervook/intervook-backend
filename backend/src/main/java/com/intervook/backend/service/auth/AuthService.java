@@ -1,11 +1,11 @@
 package com.intervook.backend.service.auth;
 
 import com.intervook.backend.exception.CommonException;
+import com.intervook.backend.model.dto.AuthDTO;
 import com.intervook.backend.util.EmailValidationUtil;
 import com.intervook.backend.util.HashUtil;
 import com.intervook.core.enums.AuthProvider;
 import com.intervook.mysql.entity.auth.Auth;
-import com.intervook.mysql.model.dto.AuthDTO;
 import com.intervook.mysql.repository.auth.AuthRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,10 +1,10 @@
 package com.intervook.backend.service;
 
 import com.intervook.backend.exception.CommonException;
+import com.intervook.backend.mapper.PostMapper;
+import com.intervook.backend.model.dto.PostDTO;
 import com.intervook.core.enums.PostVisibility;
 import com.intervook.mysql.entity.contents.Post;
-import com.intervook.mysql.mapper.PostMapper;
-import com.intervook.mysql.model.dto.PostDTO;
 import com.intervook.mysql.repository.contents.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

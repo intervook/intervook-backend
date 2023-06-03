@@ -1,9 +1,9 @@
 package com.intervook.backend.service.auth;
 
 
+import com.intervook.backend.model.dto.AuthDTO;
 import com.intervook.backend.service.UserService;
 import com.intervook.mysql.entity.auth.User;
-import com.intervook.mysql.model.dto.AuthDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.intervook.mysql.model.dto;
+package com.intervook.backend.model.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

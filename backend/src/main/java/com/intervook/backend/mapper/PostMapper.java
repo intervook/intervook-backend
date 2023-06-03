@@ -1,10 +1,10 @@
-package com.intervook.mysql.mapper;
+package com.intervook.backend.mapper;
 
+import com.intervook.backend.model.dto.ImageFileDTO;
+import com.intervook.backend.model.dto.PostDTO;
 import com.intervook.mysql.entity.contents.ImageFile;
 import com.intervook.mysql.entity.contents.Post;
 import com.intervook.mysql.entity.contents.PostTag;
-import com.intervook.mysql.model.dto.ImageFileDTO;
-import com.intervook.mysql.model.dto.PostDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;

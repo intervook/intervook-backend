@@ -1,7 +1,7 @@
-package com.intervook.mysql.mapper;
+package com.intervook.backend.mapper;
 
+import com.intervook.backend.model.dto.QuizDTO;
 import com.intervook.mysql.entity.contents.Quiz;
-import com.intervook.mysql.model.dto.QuizDTO;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

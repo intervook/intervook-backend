@@ -2,10 +2,10 @@ package com.intervook.backend.controller;
 
 import com.intervook.backend.exception.CommonException;
 import com.intervook.backend.model.dto.BaseResponse;
+import com.intervook.backend.model.dto.QuizDTO;
 import com.intervook.backend.service.QuizService;
 import com.intervook.core.enums.ProblemType;
-import com.intervook.mysql.model.QuizFilter;
-import com.intervook.mysql.model.dto.QuizDTO;
+import com.intervook.mysql.querydsl.QuizFilter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

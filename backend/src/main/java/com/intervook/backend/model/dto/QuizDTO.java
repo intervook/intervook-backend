@@ -1,4 +1,4 @@
-package com.intervook.mysql.model.dto;
+package com.intervook.backend.model.dto;
 
 import com.intervook.core.enums.ProblemType;
 import jakarta.annotation.Nullable;
