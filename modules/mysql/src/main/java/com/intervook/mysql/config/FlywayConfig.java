@@ -23,11 +23,13 @@ public class FlywayConfig {
     }
 
     private void flywayMigrate(DataSource datasource, String scriptLocation) {
-        Flyway.configure()
+        Flyway flyway = Flyway.configure()
                 .baselineOnMigrate(true)
                 .dataSource(datasource)
                 .locations(scriptLocation)
-                .load()
-                .migrate();
+                .load();
+
+        flyway.repair();
+        flyway.migrate();
     }
 }

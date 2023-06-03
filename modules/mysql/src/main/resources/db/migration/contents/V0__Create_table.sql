@@ -2,27 +2,28 @@ create table post
 (
     id              bigint auto_increment
         primary key,
-    user_id         bigint       not null,
-    like_cnt        int          not null,
-    link            varchar(255) null,
-    post_visibility varchar(255) not null,
-    sub_title       varchar(255) null,
-    title           varchar(255) not null,
-    update_dt       datetime(6)  not null,
-    create_dt       datetime(6)  not null
+    user_id         bigint        not null,
+    like_cnt        int           not null,
+    link            varchar(255)  null,
+    post_visibility varchar(255)  not null,
+    sub_title       text          null,
+    title           varchar(1000) not null,
+    create_dt       datetime(6)   not null DEFAULT CURRENT_TIMESTAMP(6),
+    update_dt       datetime(6)   not null DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)
 );
 
 create table quiz
 (
     id          bigint auto_increment
         primary key,
-    answer      varchar(255) not null,
-    category    varchar(255) not null,
-    description varchar(255) not null,
-    title       varchar(255) not null,
-    type        varchar(255) not null,
-    create_dt   datetime(6)  not null,
-    update_dt   datetime(6)  not null
+    category    varchar(255)  not null,
+    title       varchar(1000) not null,
+    answer      text          not null,
+    description text          null,
+    link        varchar(1000) null,
+    type        varchar(255)  not null,
+    create_dt   datetime(6)   not null DEFAULT CURRENT_TIMESTAMP(6),
+    update_dt   datetime(6)   not null DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)
 );
 
 create table post_tag
@@ -30,8 +31,8 @@ create table post_tag
     id        bigint auto_increment
         primary key,
     content   varchar(255) null,
-    create_dt datetime(6)  not null,
-    update_dt datetime(6)  not null
+    create_dt datetime(6)  not null DEFAULT CURRENT_TIMESTAMP(6),
+    update_dt datetime(6)  not null DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)
 );
 
 create table image_file
@@ -42,8 +43,8 @@ create table image_file
     file_name          varchar(255) not null,
     original_file_name varchar(255) not null,
     path               varchar(255) not null,
-    create_dt          datetime(6)  not null,
-    update_dt          datetime(6)  not null
+    create_dt          datetime(6)  not null DEFAULT CURRENT_TIMESTAMP(6),
+    update_dt          datetime(6)  not null DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)
 );
 
 create table post_tag_mapping
@@ -75,8 +76,8 @@ create table bookmark_mapping
     activation tinyint(1)  not null,
     post_id    bigint      not null,
     user_id    bigint      not null,
-    update_dt  datetime(6) not null,
-    create_dt  datetime(6) not null,
+    create_dt  datetime(6) not null DEFAULT CURRENT_TIMESTAMP(6),
+    update_dt  datetime(6) not null DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
     constraint FK_BookmarkMapping_post_id
         foreign key (post_id) references post (id)
 );
@@ -88,8 +89,8 @@ create table like_mapping
     user_id    bigint      not null,
     post_id    bigint      not null,
     activation tinyint(1)  not null,
-    create_dt  datetime(6) not null,
-    update_dt  datetime(6) not null,
+    create_dt  datetime(6) not null DEFAULT CURRENT_TIMESTAMP(6),
+    update_dt  datetime(6) not null DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
     constraint FK_LikeMapping_post_id
         foreign key (post_id) references post (id)
 );

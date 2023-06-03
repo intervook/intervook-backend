@@ -16,14 +16,14 @@ public class Quiz {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    private String category;
+    private String category; // 프론트, CS
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ProblemType type;
     @Column(nullable = false)
     private String title;
-    @Column(nullable = false)
     private String description;
+    private String link;
     @Column(nullable = false)
     private String answer;
 
