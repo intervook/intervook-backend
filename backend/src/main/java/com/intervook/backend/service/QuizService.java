@@ -3,7 +3,7 @@ package com.intervook.backend.service;
 import com.intervook.backend.mapper.QuizMapper;
 import com.intervook.backend.model.dto.QuizDTO;
 import com.intervook.mysql.entity.contents.Quiz;
-import com.intervook.mysql.querydsl.QuizFilter;
+import com.intervook.mysql.model.querydsl.QuizFilter;
 import com.intervook.mysql.repository.contents.querydsl.QuizRepository;
 import com.intervook.mysql.repository.contents.querydsl.QuizRepositorySupport;
 import lombok.RequiredArgsConstructor;

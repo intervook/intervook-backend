@@ -30,8 +30,18 @@ public class Post {
     @Column(nullable = false)
     private int likeCnt = 0;
     @OneToMany
+    @JoinTable(
+            name = "post_image_mapping",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "image_file_id")
+    )
     private List<ImageFile> imageFileList = new ArrayList<>();
     @ManyToMany
+    @JoinTable(
+            name = "post_tag_mapping",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "post_tag_id")
+    )
     private List<PostTag> postTagList = new ArrayList<>();
 
     @Column(nullable = false)

@@ -2,7 +2,7 @@ package com.intervook.mysql.repository.contents.querydsl;
 
 import com.intervook.mysql.entity.contents.QQuiz;
 import com.intervook.mysql.entity.contents.Quiz;
-import com.intervook.mysql.querydsl.QuizFilter;
+import com.intervook.mysql.model.querydsl.QuizFilter;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.util.StringUtils;
 import com.querydsl.jpa.impl.JPAQueryFactory;

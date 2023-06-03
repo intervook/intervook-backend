@@ -1,4 +1,4 @@
-package com.intervook.mysql.querydsl;
+package com.intervook.mysql.model.querydsl;
 
 import com.intervook.core.enums.ProblemType;
 import org.springframework.lang.Nullable;

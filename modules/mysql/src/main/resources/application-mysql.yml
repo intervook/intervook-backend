@@ -2,6 +2,8 @@ spring:
   config:
     activate:
       on-profile: mysql_dev
+  flyway:
+    enabled: false
   jpa:
     show-sql: true
     hibernate:
@@ -14,7 +16,7 @@ spring:
       password: root
     contents:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3806/intervook
+      url: jdbc:mysql://localhost:3906/intervook
       username: root
       password: root
 
@@ -23,6 +25,8 @@ spring:
   config:
     activate:
       on-profile: mysql_aws_dev
+  flyway:
+    enabled: false
   jpa:
     show-sql: true
   datasource:
@@ -33,7 +37,7 @@ spring:
       password: root
     contents:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3806/intervook
+      url: jdbc:mysql://localhost:3906/intervook
       username: root
       password: root
 
@@ -42,6 +46,8 @@ spring:
   config:
     activate:
       on-profile: mysql_prod
+  flyway:
+    enabled: false
   jpa:
     show-sql: false
   datasource:
@@ -52,7 +58,7 @@ spring:
       password: root
     contents:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3806/intervook
+      url: jdbc:mysql://localhost:3906/intervook
       username: root
       password: root
 
